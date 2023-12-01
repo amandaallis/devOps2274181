@@ -1,14 +1,34 @@
-pipeline {
+pipeline{
+
     agent any
 
     stages {
-        stage('Build TADS') {
+        stage('Install NPM') {
             steps {
-            bat'''
-               docker info
-               java --version
-               docker compose version
-               '''
+                sh '''
+                        npm install
+                '''
+            }
+        }
+        stage('Test NPM') {
+            steps {
+                sh '''
+                    npm test
+                '''
+            }
+        }
+        stage('Construindo Docker') {
+            steps {
+                sh '''
+                    docker build .
+                '''
+            }
+        }
+        stage('Compose Docker') {
+            steps {
+                sh '''
+                    docker compose up
+                '''
             }
         }
     }
